@@ -1,0 +1,21 @@
+name: Dastardly Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dastardly_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Ejecutar Dastardly Scan
+        run: |
+          docker run --rm -v "$(pwd):/dastardly" portswigger/dastardly:latest \
+          --target-url "http://tu-app.com"
