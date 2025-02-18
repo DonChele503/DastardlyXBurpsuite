@@ -18,4 +18,4 @@ jobs:
       - name: Ejecutar Dastardly Scan
         run: |
           docker run --rm -v "$(pwd):/dastardly" portswigger/dastardly:latest \
-          --target-url "http://tu-app.com"
+          --target-url "http://localhost:3000"
