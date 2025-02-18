@@ -9,13 +9,24 @@ on:
       - main
 
 jobs:
-  dastardly_scan:
+  juice_shop_and_scan:
     runs-on: ubuntu-latest
+    services:
+      juice-shop:
+        image: docker.io/bkimminich/juice-shop
+        ports:
+          - 3000:3000
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
 
+      - name: Login a Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Esperar a que Juice Shop esté listo
+        run: sleep 30
+
       - name: Ejecutar Dastardly Scan
         run: |
-          docker run --rm -v "$(pwd):/dastardly" portswigger/dastardly:latest \
-          --target-url "http://localhost:3000"
+          docker pull portswigger/dastardly:latest
+          docker run --rm -v "$(pwd):/dastardly" portswigger/dastardly:latest --target-url "http://localhost:3000"
